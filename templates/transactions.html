@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block title %}Issue / Return - Library MS{% endblock %}
+{% block page_title %}<i class="fas fa-exchange-alt"></i> Issue & Return Books{% endblock %}
+
+{% block content %}
+
+{% if session.role == 'admin' %}
+<!-- Issue Book Form -->
+<div class="section-header">
+    <h2><i class="fas fa-hand-holding-open"></i> Issue a Book</h2>
+</div>
+<div class="form-card compact">
+    <form method="POST" action="{{ url_for('issue_book') }}" class="lms-form inline-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label><i class="fas fa-book"></i> Select Book</label>
+                <select name="book_id" required>
+                    <option value="">-- Select Book --</option>
+                    {% for b in books %}
+                    <option value="{{ b.id }}">{{ b.title }} ({{ b.available_copies }} available)</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Select Member</label>
+                <select name="user_id" required>
+                    <option value="">-- Select Member --</option>
+                    {% for m in members %}
+                    <option value="{{ m.id }}">{{ m.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-info-circle"></i> Due Date (14 days)</label>
+                <input type="text" value="Auto: 14 days from today" disabled class="input-disabled">
+            </div>
+        </div>
+        <div class="form-buttons">
+            <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Issue Book</button>
+        </div>
+    </form>
+</div>
+{% endif %}
+
+<!-- Transactions Table -->
+<div class="section-header">
+    <h2><i class="fas fa-list"></i> All Transactions</h2>
+</div>
+<div class="filter-row">
+    <button class="filter-btn active" onclick="filterTable('all', this)">All</button>
+    <button class="filter-btn" onclick="filterTable('Issued', this)">Issued</button>
+    <button class="filter-btn" onclick="filterTable('Overdue', this)">Overdue</button>
+    <button class="filter-btn" onclick="filterTable('Returned', this)">Returned</button>
+</div>
+<div class="table-card">
+    <div class="table-responsive">
+        <table class="data-table" id="txnTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Book</th>
+                    <th>Member</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Fine</th>
+                    <th>Status</th>
+                    {% if session.role == 'admin' %}<th>Action</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in transactions %}
+                {% set is_overdue = t.status == 'issued' and t.due_date < today %}
+                <tr data-status="{{ 'Overdue' if is_overdue else (t.status | capitalize) }}">
+                    <td>{{ t.id }}</td>
+                    <td><span class="book-title">{{ t.book_title }}</span></td>
+                    <td>{{ t.member_name }}</td>
+                    <td>{{ t.issue_date }}</td>
+                    <td class="{{ 'text-danger' if is_overdue else '' }}">{{ t.due_date }}</td>
+                    <td>{{ t.return_date or '-' }}</td>
+                    <td>{% if t.fine > 0 %}<span class="fine-amt">₹{{ '%.2f'|format(t.fine) }}</span>{% else %}-{% endif %}</td>
+                    <td>
+                        <span class="badge badge-{{ 'danger' if is_overdue else ('success' if t.status == 'returned' else 'warning') }}">
+                            {{ 'Overdue' if is_overdue else (t.status | capitalize) }}
+                        </span>
+                    </td>
+                    {% if session.role == 'admin' %}
+                    <td>
+                        {% if t.status == 'issued' %}
+                        <form method="POST" action="{{ url_for('return_book', txn_id=t.id) }}">
+                            <button type="submit" class="btn-return" title="Mark as Returned" onclick="return confirm('Mark as returned?')">
+                                <i class="fas fa-undo"></i> Return
+                            </button>
+                        </form>
+                        {% else %}
+                        <span class="text-muted">Completed</span>
+                        {% endif %}
+                    </td>
+                    {% endif %}
+                </tr>
+                {% else %}
+                <tr><td colspan="9" class="empty-row">No transactions found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function filterTable(status, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const rows = document.querySelectorAll('#txnTable tbody tr');
+    rows.forEach(row => {
+        if (status === 'all' || row.dataset.status === status) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}

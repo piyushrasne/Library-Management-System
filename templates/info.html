@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+{% block title %}Project Info - Library MS{% endblock %}
+{% block page_title %}<i class="fas fa-info-circle"></i> Project Information{% endblock %}
+
+{% block content %}
+<div class="info-page">
+
+    <!-- Hero Banner -->
+    <div class="info-hero">
+        <div class="info-hero-text">
+            <h1><i class="fas fa-book-open"></i> Library Management System</h1>
+            <p class="info-hero-sub">A full-stack web application for managing library books, members, and transactions — built with Python, Flask, SQLite, HTML, CSS & JavaScript.</p>
+            <div class="info-hero-tags">
+                <span class="tech-tag python"><i class="fab fa-python"></i> Python</span>
+                <span class="tech-tag flask"><i class="fas fa-fire"></i> Flask</span>
+                <span class="tech-tag sql"><i class="fas fa-database"></i> SQLite</span>
+                <span class="tech-tag web"><i class="fab fa-html5"></i> HTML/CSS/JS</span>
+            </div>
+        </div>
+        <div class="info-hero-icon">
+            <i class="fas fa-university"></i>
+        </div>
+    </div>
+
+    <!-- Project Overview -->
+    <div class="section-header"><h2><i class="fas fa-clipboard-list"></i> Project Overview</h2></div>
+    <div class="info-card">
+        <p>The <strong>Library Management System (LMS)</strong> is a web-based application designed to automate and streamline all day-to-day operations of a library. It replaces manual record-keeping with a secure, fast, and easy-to-use digital platform.</p>
+        <div class="info-overview-grid">
+            <div class="overview-item"><i class="fas fa-user-shield"></i><div><strong>Developer</strong><span>Piyush Rasne</span></div></div>
+            <div class="overview-item"><i class="fas fa-university"></i><div><strong>College</strong><span>Shankarrao Butte Patil Senior College, Junnar</span></div></div>
+            <div class="overview-item"><i class="fas fa-server"></i><div><strong>Server</strong><span>Flask (localhost:5000)</span></div></div>
+            <div class="overview-item"><i class="fas fa-database"></i><div><strong>Database</strong><span>SQLite (library.db)</span></div></div>
+            <div class="overview-item"><i class="fas fa-code-branch"></i><div><strong>Version</strong><span>1.0.0 — March 2026</span></div></div>
+            <div class="overview-item"><i class="fas fa-layer-group"></i><div><strong>Architecture</strong><span>MVC (Flask + Jinja2 + SQLite)</span></div></div>
+        </div>
+    </div>
+
+    <!-- Tech Stack with Image -->
+    <div class="section-header"><h2><i class="fas fa-code"></i> Technologies & Languages Used</h2></div>
+    <div class="info-card">
+        <img src="{{ url_for('static', filename='tech_stack.png') }}" alt="Tech Stack" class="info-img">
+        <div class="tech-stack-grid">
+
+            <div class="tech-detail-card">
+                <div class="tech-detail-header python-bg">
+                    <i class="fab fa-python"></i>
+                    <div>
+                        <strong>Python 3</strong>
+                        <span>Backend Language</span>
+                    </div>
+                </div>
+                <p>Python is the core programming language used for all backend logic. It is simple, powerful, and widely used for web development.</p>
+                <ul>
+                    <li>Handles all server-side logic</li>
+                    <li>Processes form data and database queries</li>
+                    <li>Manages user sessions and authentication</li>
+                    <li>Calculates overdue fines automatically</li>
+                </ul>
+                <a href="https://www.youtube.com/watch?v=_uQrJ0TkZlc" target="_blank" class="learn-link"><i class="fab fa-youtube"></i> Learn Python — Programming with Mosh</a>
+            </div>
+
+            <div class="tech-detail-card">
+                <div class="tech-detail-header flask-bg">
+                    <i class="fas fa-fire"></i>
+                    <div>
+                        <strong>Flask</strong>
+                        <span>Web Framework</span>
+                    </div>
+                </div>
+                <p>Flask is a lightweight Python web framework used to build the web routes, handle HTTP requests, and render HTML templates.</p>
+                <ul>
+                    <li>Defines all URL routes (login, books, members, etc.)</li>
+                    <li>Renders Jinja2 HTML templates</li>
+                    <li>Manages login sessions with <code>flask-login</code></li>
+                    <li>Handles POST/GET form submissions securely</li>
+                </ul>
+                <a href="https://www.youtube.com/watch?v=Z1RJmh_OqeA" target="_blank" class="learn-link"><i class="fab fa-youtube"></i> Learn Flask — freeCodeCamp</a>
+            </div>
+
+            <div class="tech-detail-card">
+                <div class="tech-detail-header sqlite-bg">
+                    <i class="fas fa-database"></i>
+                    <div>
+                        <strong>SQLite</strong>
+                        <span>Database</span>
+                    </div>
+                </div>
+                <p>SQLite is an embedded relational database stored as a single file (<code>library.db</code>). No separate server is required — it works out of the box.</p>
+                <ul>
+                    <li>Stores all books, members and transactions</li>
+                    <li>Supports SQL queries for fast data retrieval</li>
+                    <li>Lightweight — no installation needed</li>
+                    <li>Automatically created on first run</li>
+                </ul>
+                <a href="https://www.youtube.com/watch?v=byHcYRpMgI4" target="_blank" class="learn-link"><i class="fab fa-youtube"></i> Learn SQLite — TechWithTim</a>
+            </div>
+
+            <div class="tech-detail-card">
+                <div class="tech-detail-header web-bg">
+                    <i class="fab fa-html5"></i>
+                    <div>
+                        <strong>HTML / CSS / JavaScript</strong>
+                        <span>Frontend</span>
+                    </div>
+                </div>
+                <p>The frontend is built with pure HTML5, CSS3, and Vanilla JavaScript for a modern, responsive, dark-themed user interface.</p>
+                <ul>
+                    <li><strong>HTML (Jinja2)</strong> — page structure and templates</li>
+                    <li><strong>CSS</strong> — premium dark theme, animations, mobile layout</li>
+                    <li><strong>JavaScript</strong> — sidebar toggle, chart animations, auto-search</li>
+                    <li><strong>Font Awesome</strong> — icons throughout the app</li>
+                </ul>
+                <a href="https://www.youtube.com/watch?v=mU6anWqZJcc" target="_blank" class="learn-link"><i class="fab fa-youtube"></i> Learn HTML/CSS/JS — freeCodeCamp</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Database Tables -->
+    <div class="section-header"><h2><i class="fas fa-table"></i> Database Tables & Schema</h2></div>
+    <div class="info-card">
+        <img src="{{ url_for('static', filename='db_schema.png') }}" alt="Database Schema" class="info-img">
+
+        <!-- Users Table -->
+        <div class="db-table-block">
+            <div class="db-table-header">
+                <i class="fas fa-users"></i>
+                <div>
+                    <strong>Table: users</strong>
+                    <span>Stores all admin and member account details</span>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table schema-table">
+                    <thead><tr><th>Column</th><th>Type</th><th>Description</th><th>Example</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>INTEGER PK</td><td>Unique identifier for each user</td><td>1, 2, 3…</td></tr>
+                        <tr><td><code>name</code></td><td>TEXT</td><td>Full name of the user</td><td>Piyush Rasne</td></tr>
+                        <tr><td><code>email</code></td><td>TEXT UNIQUE</td><td>Login email address (unique)</td><td>piyush@library.com</td></tr>
+                        <tr><td><code>password</code></td><td>TEXT</td><td>Hashed password (Werkzeug)</td><td>pbkdf2:sha256:…</td></tr>
+                        <tr><td><code>role</code></td><td>TEXT</td><td>User role: 'admin' or 'member'</td><td>admin / member</td></tr>
+                        <tr><td><code>phone</code></td><td>TEXT</td><td>Contact phone number</td><td>9876543210</td></tr>
+                        <tr><td><code>address</code></td><td>TEXT</td><td>Member's home address</td><td>Junnar, Pune</td></tr>
+                        <tr><td><code>membership_date</code></td><td>TEXT</td><td>Date of joining the library</td><td>2026-03-08</td></tr>
+                        <tr><td><code>is_active</code></td><td>INTEGER</td><td>Account status (1=active, 0=inactive)</td><td>1</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Books Table -->
+        <div class="db-table-block">
+            <div class="db-table-header">
+                <i class="fas fa-book"></i>
+                <div>
+                    <strong>Table: books</strong>
+                    <span>Stores all book records in the library catalog</span>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table schema-table">
+                    <thead><tr><th>Column</th><th>Type</th><th>Description</th><th>Example</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>INTEGER PK</td><td>Unique book identifier</td><td>1, 2, 3…</td></tr>
+                        <tr><td><code>title</code></td><td>TEXT</td><td>Full title of the book</td><td>Python Programming</td></tr>
+                        <tr><td><code>author</code></td><td>TEXT</td><td>Name of the author(s)</td><td>Mark Lutz</td></tr>
+                        <tr><td><code>isbn</code></td><td>TEXT UNIQUE</td><td>International Standard Book Number</td><td>978-1449355739</td></tr>
+                        <tr><td><code>category</code></td><td>TEXT</td><td>Subject category of the book</td><td>Programming</td></tr>
+                        <tr><td><code>publisher</code></td><td>TEXT</td><td>Publishing company name</td><td>O'Reilly Media</td></tr>
+                        <tr><td><code>year</code></td><td>INTEGER</td><td>Year of publication</td><td>2013</td></tr>
+                        <tr><td><code>total_copies</code></td><td>INTEGER</td><td>Total copies owned by the library</td><td>4</td></tr>
+                        <tr><td><code>available_copies</code></td><td>INTEGER</td><td>Copies currently available to issue</td><td>3</td></tr>
+                        <tr><td><code>description</code></td><td>TEXT</td><td>Short book description</td><td>Learning Python…</td></tr>
+                        <tr><td><code>added_date</code></td><td>TEXT</td><td>Date when book was added</td><td>2026-03-08</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="db-table-block">
+            <div class="db-table-header">
+                <i class="fas fa-exchange-alt"></i>
+                <div>
+                    <strong>Table: transactions</strong>
+                    <span>Tracks every book issue and return with fine calculation</span>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="data-table schema-table">
+                    <thead><tr><th>Column</th><th>Type</th><th>Description</th><th>Example</th></tr></thead>
+                    <tbody>
+                        <tr><td><code>id</code></td><td>INTEGER PK</td><td>Unique transaction identifier</td><td>1, 2, 3…</td></tr>
+                        <tr><td><code>book_id</code></td><td>INTEGER FK</td><td>Foreign key → books.id</td><td>5</td></tr>
+                        <tr><td><code>user_id</code></td><td>INTEGER FK</td><td>Foreign key → users.id</td><td>2</td></tr>
+                        <tr><td><code>issue_date</code></td><td>TEXT</td><td>Date when book was issued</td><td>2026-03-01</td></tr>
+                        <tr><td><code>due_date</code></td><td>TEXT</td><td>Expected return date (14 days)</td><td>2026-03-15</td></tr>
+                        <tr><td><code>return_date</code></td><td>TEXT</td><td>Actual return date (NULL if not returned)</td><td>2026-03-14</td></tr>
+                        <tr><td><code>fine</code></td><td>REAL</td><td>Late fine in ₹ (₹5 per day overdue)</td><td>25.00</td></tr>
+                        <tr><td><code>status</code></td><td>TEXT</td><td>Current status: 'issued' or 'returned'</td><td>issued</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Features -->
+    <div class="section-header"><h2><i class="fas fa-star"></i> Key Features of the System</h2></div>
+    <div class="features-grid-info">
+        <div class="feature-info-card"><i class="fas fa-shield-alt"></i><h4>Role-Based Login</h4><p>Two roles: <strong>Admin</strong> (full access) and <strong>Member</strong> (view only). Passwords are hashed using Werkzeug for security.</p></div>
+        <div class="feature-info-card"><i class="fas fa-book"></i><h4>Book Catalog</h4><p>Full CRUD operations — Add, Edit, Delete, and Search books by title, author, ISBN, or category.</p></div>
+        <div class="feature-info-card"><i class="fas fa-users"></i><h4>Member Management</h4><p>Register members with email/password, activate or deactivate accounts, and view issue history.</p></div>
+        <div class="feature-info-card"><i class="fas fa-exchange-alt"></i><h4>Issue & Return</h4><p>Issue books with automatic 14-day due dates. Return books and auto-calculate overdue fines at ₹5/day.</p></div>
+        <div class="feature-info-card"><i class="fas fa-chart-bar"></i><h4>Reports & Analytics</h4><p>Monthly issue charts, most borrowed books, category statistics, and complete overdue book reports.</p></div>
+        <div class="feature-info-card"><i class="fas fa-mobile-alt"></i><h4>Mobile Responsive</h4><p>Fully responsive layout that works on desktops, tablets, and smartphones with a collapsible sidebar.</p></div>
+    </div>
+
+    <!-- How to Run -->
+    <div class="section-header"><h2><i class="fas fa-terminal"></i> How to Run the Project</h2></div>
+    <div class="info-card">
+        <div class="steps-grid">
+            <div class="step-item"><div class="step-num">1</div><div><strong>Install Python</strong><p>Download Python 3.10+ from <a href="https://python.org" target="_blank">python.org</a> and install it.</p></div></div>
+            <div class="step-item"><div class="step-num">2</div><div><strong>Install Dependencies</strong><p>Open terminal in the project folder and run:<br><code>pip install flask werkzeug</code></p></div></div>
+            <div class="step-item"><div class="step-num">3</div><div><strong>Run the App</strong><p>In the same terminal run:<br><code>python app.py</code></p></div></div>
+            <div class="step-item"><div class="step-num">4</div><div><strong>Open in Browser</strong><p>Visit <a href="http://127.0.0.1:5000" target="_blank">http://127.0.0.1:5000</a> and log in.</p></div></div>
+        </div>
+        <div class="run-code-block">
+            <div class="run-code-title"><i class="fas fa-terminal"></i> Terminal Commands</div>
+            <pre>cd "library management system"
+pip install flask werkzeug
+python app.py
+# Open: http://127.0.0.1:5000</pre>
+        </div>
+    </div>
+
+    <!-- Video Resources -->
+    <div class="section-header"><h2><i class="fab fa-youtube"></i> Learning Resources & Videos</h2></div>
+    <div class="videos-grid">
+        <div class="video-card">
+            <div class="video-thumb" onclick="window.open('https://www.youtube.com/watch?v=_uQrJ0TkZlc','_blank')">
+                <i class="fab fa-youtube"></i>
+                <span>▶ Watch</span>
+            </div>
+            <div class="video-info">
+                <strong>Python Full Course for Beginners</strong>
+                <small>Programming with Mosh · 6 hours</small>
+                <p>Complete Python tutorial covering all concepts used in this project — variables, functions, OOP, and file handling.</p>
+                <a href="https://www.youtube.com/watch?v=_uQrJ0TkZlc" target="_blank" class="video-link">Watch on YouTube →</a>
+            </div>
+        </div>
+        <div class="video-card">
+            <div class="video-thumb" onclick="window.open('https://www.youtube.com/watch?v=Z1RJmh_OqeA','_blank')">
+                <i class="fab fa-youtube"></i>
+                <span>▶ Watch</span>
+            </div>
+            <div class="video-info">
+                <strong>Flask Web Development Full Course</strong>
+                <small>freeCodeCamp · 4 hours</small>
+                <p>Build web apps with Flask from scratch — routing, templates, forms, sessions, and database integration.</p>
+                <a href="https://www.youtube.com/watch?v=Z1RJmh_OqeA" target="_blank" class="video-link">Watch on YouTube →</a>
+            </div>
+        </div>
+        <div class="video-card">
+            <div class="video-thumb" onclick="window.open('https://www.youtube.com/watch?v=byHcYRpMgI4','_blank')">
+                <i class="fab fa-youtube"></i>
+                <span>▶ Watch</span>
+            </div>
+            <div class="video-info">
+                <strong>SQLite & Python Database Tutorial</strong>
+                <small>Tech With Tim · 1.5 hours</small>
+                <p>Learn SQLite databases with Python — creating tables, inserting data, SQL queries, and reading results.</p>
+                <a href="https://www.youtube.com/watch?v=byHcYRpMgI4" target="_blank" class="video-link">Watch on YouTube →</a>
+            </div>
+        </div>
+        <div class="video-card">
+            <div class="video-thumb" onclick="window.open('https://www.youtube.com/watch?v=mU6anWqZJcc','_blank')">
+                <i class="fab fa-youtube"></i>
+                <span>▶ Watch</span>
+            </div>
+            <div class="video-info">
+                <strong>HTML, CSS & JavaScript Full Course</strong>
+                <small>freeCodeCamp · 8 hours</small>
+                <p>Full frontend development course covering HTML5, CSS3, and JavaScript used to build the UI of this project.</p>
+                <a href="https://www.youtube.com/watch?v=mU6anWqZJcc" target="_blank" class="video-link">Watch on YouTube →</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Edit Member - Library MS{% endblock %}
+{% block page_title %}<i class="fas fa-user-edit"></i> Edit Member{% endblock %}
+{% block content %}
+<div class="form-card">
+    <form method="POST" class="lms-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Full Name *</label>
+                <input type="text" name="name" value="{{ member.name }}" required>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email Address *</label>
+                <input type="email" name="email" value="{{ member.email }}" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> Phone Number</label>
+                <input type="tel" name="phone" value="{{ member.phone or '' }}">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-toggle-on"></i> Status</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" name="is_active" {% if member.is_active %}checked{% endif %}>
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Active</span>
+                </label>
+            </div>
+        </div>
+        <div class="form-group full-width">
+            <label><i class="fas fa-map-marker-alt"></i> Address</label>
+            <textarea name="address" rows="2">{{ member.address or '' }}</textarea>
+        </div>
+        <div class="form-buttons">
+            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Update Member</button>
+            <a href="{{ url_for('members') }}" class="btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

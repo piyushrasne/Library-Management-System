@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Books - Library MS{% endblock %}
+{% block page_title %}<i class="fas fa-book"></i> Books Catalog{% endblock %}
+
+{% block content %}
+<div class="page-actions">
+    <form class="search-form" method="GET">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" name="q" placeholder="Search by title, author, ISBN..." value="{{ q }}">
+        </div>
+        <select name="category" class="filter-select">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat.category }}" {% if selected_cat == cat.category %}selected{% endif %}>{{ cat.category }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn-primary"><i class="fas fa-search"></i> Search</button>
+        {% if q or selected_cat %}<a href="{{ url_for('books') }}" class="btn-secondary">Clear</a>{% endif %}
+    </form>
+    {% if session.role == 'admin' %}
+    <a href="{{ url_for('add_book') }}" class="btn-primary"><i class="fas fa-plus"></i> Add Book</a>
+    {% endif %}
+</div>
+
+<div class="results-info">
+    Showing <strong>{{ books|length }}</strong> book(s)
+    {% if q %} for "<em>{{ q }}</em>"{% endif %}
+    {% if selected_cat %} in <em>{{ selected_cat }}</em>{% endif %}
+</div>
+
+<div class="books-grid">
+    {% for book in books %}
+    <div class="book-card">
+        <div class="book-cover">
+            <i class="fas fa-book-open"></i>
+            <span class="book-cat-badge">{{ book.category or 'General' }}</span>
+        </div>
+        <div class="book-info">
+            <h3 class="book-title" title="{{ book.title }}">{{ book.title }}</h3>
+            <p class="book-author"><i class="fas fa-user-pen"></i> {{ book.author }}</p>
+            <p class="book-isbn"><i class="fas fa-barcode"></i> {{ book.isbn or 'N/A' }}</p>
+            <p class="book-publisher"><i class="fas fa-building"></i> {{ book.publisher or 'N/A' }} ({{ book.year or '-' }})</p>
+            <div class="book-availability">
+                <span class="avail-badge {% if book.available_copies > 0 %}avail{% else %}unavail{% endif %}">
+                    {% if book.available_copies > 0 %}
+                        <i class="fas fa-check-circle"></i> {{ book.available_copies }}/{{ book.total_copies }} Available
+                    {% else %}
+                        <i class="fas fa-times-circle"></i> Not Available
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        {% if session.role == 'admin' %}
+        <div class="book-actions">
+            <a href="{{ url_for('edit_book', book_id=book.id) }}" class="btn-icon edit" title="Edit"><i class="fas fa-edit"></i></a>
+            <form method="POST" action="{{ url_for('delete_book', book_id=book.id) }}" onsubmit="return confirm('Delete this book?')">
+                <button type="submit" class="btn-icon delete" title="Delete"><i class="fas fa-trash"></i></button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-book-open"></i>
+        <h3>No books found</h3>
+        <p>Try a different search term or add new books.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
