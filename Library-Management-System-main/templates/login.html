@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% block title %}Login - Library Management System{% endblock %}
+{% block auth_content %}
+<div class="login-page">
+    <div class="login-bg">
+        <div class="floating-book" style="--i:1"><i class="fas fa-book-open"></i></div>
+        <div class="floating-book" style="--i:2"><i class="fas fa-book"></i></div>
+        <div class="floating-book" style="--i:3"><i class="fas fa-graduation-cap"></i></div>
+        <div class="floating-book" style="--i:4"><i class="fas fa-bookmark"></i></div>
+        <div class="floating-book" style="--i:5"><i class="fas fa-scroll"></i></div>
+    </div>
+
+    <div class="login-split">
+
+        <!-- LEFT PANEL: Info about the system -->
+        <div class="login-info-side">
+            <div class="login-info-inner">
+                <div class="login-brand">
+                    <i class="fas fa-university"></i>
+                    <h1>SBP BSc IT Library</h1>
+                    <p class="login-brand-sub">Shankarrao Butte Patil BSc IT College</p>
+                </div>
+
+                <p class="login-tagline">
+                    A complete digital platform to manage library books, members, and transactions — fast, secure, and easy to use.
+                </p>
+
+                <div class="login-features">
+                    <div class="login-feature-item">
+                        <div class="lf-icon"><i class="fas fa-book"></i></div>
+                        <div>
+                            <strong>Book Management</strong>
+                            <span>Add, edit, search books by title, author, ISBN & category</span>
+                        </div>
+                    </div>
+                    <div class="login-feature-item">
+                        <div class="lf-icon"><i class="fas fa-users"></i></div>
+                        <div>
+                            <strong>Member Records</strong>
+                            <span>Maintain and manage library member profiles securely</span>
+                        </div>
+                    </div>
+                    <div class="login-feature-item">
+                        <div class="lf-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div>
+                            <strong>Issue & Return</strong>
+                            <span>Issue books with auto due dates and process returns</span>
+                        </div>
+                    </div>
+                    <div class="login-feature-item">
+                        <div class="lf-icon"><i class="fas fa-rupee-sign"></i></div>
+                        <div>
+                            <strong>Fine Calculation</strong>
+                            <span>Automatic fine tracking for overdue books (₹5/day)</span>
+                        </div>
+                    </div>
+                    <div class="login-feature-item">
+                        <div class="lf-icon"><i class="fas fa-chart-bar"></i></div>
+                        <div>
+                            <strong>Reports & Analytics</strong>
+                            <span>Monthly stats, popular books, overdue list and more</span>
+                        </div>
+                    </div>
+                    <div class="login-feature-item">
+                        <div class="lf-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div>
+                            <strong>Secure Access</strong>
+                            <span>Role-based login for Admin and Library Members</span>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: Login form -->
+        <div class="login-form-side">
+            <div class="login-card">
+                <div class="login-logo">
+                    <i class="fas fa-lock"></i>
+                    <h2>Sign In</h2>
+                    <p>Access your library account</p>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    <i class="fas fa-exclamation-circle"></i> {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <form method="POST" class="login-form" id="loginForm">
+                    <div class="role-tabs">
+                        <button type="button" class="role-tab active" data-role="admin" onclick="selectRole('admin', this)">
+                            <i class="fas fa-shield-alt"></i> Admin
+                        </button>
+                        <button type="button" class="role-tab" data-role="member" onclick="selectRole('member', this)">
+                            <i class="fas fa-user"></i> Member
+                        </button>
+                    </div>
+                    <input type="hidden" name="role" id="roleInput" value="admin">
+
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" name="email" id="emailInput" placeholder="Enter your email" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Password</label>
+                        <div class="password-wrap">
+                            <input type="password" name="password" id="passwordInput" placeholder="Enter your password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword()">
+                                <i class="fas fa-eye" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Creator Signature -->
+        <div class="creator-signature">
+            <span>Created by</span>
+            <span class="glitch" data-text="Piyush Rasne">Piyush Rasne</span>
+        </div>
+
+    </div>
+</div>
+<style>
+.creator-signature {
+    position: absolute;
+    bottom: 24px;
+    width: 100%;
+    text-align: center;
+    z-index: 20;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 2px;
+    animation: fadeInUp 1s 1s both;
+}
+.creator-signature .glitch {
+    position: relative;
+    color: var(--primary-light);
+    font-weight: 800;
+    margin-left: 6px;
+    font-family: monospace;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(249, 115, 22, 0.6);
+    display: inline-block;
+}
+.creator-signature .glitch::before,
+.creator-signature .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+.creator-signature .glitch::before {
+    left: 2px;
+    text-shadow: -1px 0 rgba(0, 255, 255, 0.7);
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+.creator-signature .glitch::after {
+    left: -2px;
+    text-shadow: -1px 0 rgba(255, 0, 255, 0.7);
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+@keyframes glitch-anim {
+    0% { clip: rect(10px, 9999px, 8px, 0); }
+    20% { clip: rect(32px, 9999px, 50px, 0); }
+    40% { clip: rect(2px, 9999px, 15px, 0); }
+    60% { clip: rect(70px, 9999px, 30px, 0); }
+    80% { clip: rect(15px, 9999px, 90px, 0); }
+    100% { clip: rect(40px, 9999px, 60px, 0); }
+}
+@keyframes glitch-anim-2 {
+    0% { clip: rect(65px, 9999px, 100px, 0); }
+    20% { clip: rect(10px, 9999px, 5px, 0); }
+    40% { clip: rect(80px, 9999px, 35px, 0); }
+    60% { clip: rect(20px, 9999px, 90px, 0); }
+    80% { clip: rect(50px, 9999px, 15px, 0); }
+    100% { clip: rect(10px, 9999px, 40px, 0); }
+}
+</style>
+<script>
+function selectRole(role, el) {
+    document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('roleInput').value = role;
+    document.getElementById('emailInput').placeholder = role === 'admin' ? 'Enter admin email' : 'Enter member email';
+}
+function togglePassword() {
+    const inp = document.getElementById('passwordInput');
+    const icon = document.getElementById('eyeIcon');
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        inp.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+</script>
+{% endblock %}

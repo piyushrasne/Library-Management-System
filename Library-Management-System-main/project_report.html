@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Report - Library Management System | Piyush Rasne</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #e8650a;
+    --dark: #0f172a;
+    --card: #1a2540;
+    --border: rgba(255,255,255,0.08);
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    line-height: 1.6;
+  }
+
+  /* ====== DOWNLOAD BUTTON (screen only) ====== */
+  .download-bar {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(15,23,42,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(232,101,10,0.3);
+    padding: 12px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 1000;
+  }
+  .download-bar span { font-size: 0.9rem; color: #94a3b8; }
+  .download-bar span strong { color: #e8650a; }
+  .btn-pdf {
+    background: linear-gradient(135deg, #e8650a, #c4520a);
+    color: #fff; border: none; padding: 10px 24px; border-radius: 8px;
+    font-family: inherit; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 16px rgba(232,101,10,0.4);
+    transition: all 0.2s ease;
+  }
+  .btn-pdf:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(232,101,10,0.5); }
+
+  /* ====== REPORT BODY ====== */
+  .report {
+    max-width: 860px;
+    margin: 80px auto 60px;
+    padding: 0 24px;
+  }
+
+  /* Cover Page */
+  .cover {
+    text-align: center;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #141c2e 0%, #1e1040 50%, #141c2e 100%);
+    border: 1px solid rgba(232,101,10,0.2);
+    border-radius: 20px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(232,101,10,0.05) 0%, transparent 70%);
+  }
+  .cover-icon {
+    font-size: 5rem;
+    background: linear-gradient(135deg, #e8650a, #ff8534);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px; display: block;
+  }
+  .cover h1 { font-size: 2.4rem; font-weight: 800; color: #e2e8f0; margin-bottom: 8px; }
+  .cover h2 { font-size: 1rem; font-weight: 400; color: #94a3b8; margin-bottom: 32px; }
+  .cover-divider {
+    width: 60px; height: 3px;
+    background: linear-gradient(135deg, #e8650a, #ff8534);
+    margin: 0 auto 32px;
+    border-radius: 2px;
+  }
+  .cover-meta { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+  .cover-meta-item { text-align: center; }
+  .cover-meta-item .label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .cover-meta-item .value { font-size: 0.95rem; font-weight: 600; color: #e2e8f0; }
+  .tech-tags { display: flex; gap: 8px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
+  .tech-tag {
+    padding: 6px 16px; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tt-python { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+  .tt-flask  { background: rgba(232,101,10,0.15); color: #ff8534; border: 1px solid rgba(232,101,10,0.3); }
+  .tt-sqlite { background: rgba(34,197,94,0.15);  color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+  .tt-web    { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+
+  /* Section */
+  .section { margin-bottom: 36px; }
+  .section-title {
+    font-size: 1.1rem; font-weight: 700; color: #e8650a;
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(232,101,10,0.2);
+    margin-bottom: 20px;
+  }
+  .section-num {
+    width: 28px; height: 28px; background: rgba(232,101,10,0.15);
+    border: 1px solid rgba(232,101,10,0.3);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.78rem; font-weight: 700; color: #e8650a; flex-shrink: 0;
+  }
+
+  .card {
+    background: #1a2540;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card p { color: #94a3b8; font-size: 0.9rem; line-height: 1.7; margin-bottom: 12px; }
+  .card p:last-child { margin-bottom: 0; }
+  .card p strong { color: #e2e8f0; }
+
+  /* Overview grid */
+  .overview-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px;
+  }
+  .ov-item {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px; padding: 14px 16px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .ov-item i { color: #e8650a; margin-top: 2px; font-size: 0.9rem; }
+  .ov-item strong { display: block; font-size: 0.75rem; color: #94a3b8; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .ov-item span { font-size: 0.85rem; color: #e2e8f0; font-weight: 500; }
+
+  /* Tech cards */
+  .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .tech-card {
+    background: #1a2540; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 20px; position: relative; overflow: hidden;
+  }
+  .tech-card-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+  }
+  .tech-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+  }
+  .ti-python { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .ti-flask  { background: rgba(232,101,10,0.15); color: #e8650a; }
+  .ti-sqlite { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .ti-web    { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .tech-name { font-size: 1rem; font-weight: 700; color: #e2e8f0; }
+  .tech-role { font-size: 0.72rem; color: #94a3b8; margin-top: 2px; }
+  .tech-card p { font-size: 0.82rem; color: #94a3b8; line-height: 1.6; margin-bottom: 10px; }
+  .tech-card ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .tech-card ul li {
+    font-size: 0.8rem; color: #94a3b8; padding-left: 16px; position: relative;
+  }
+  .tech-card ul li::before { content: '→ '; color: #e8650a; position: absolute; left: 0; }
+  .yt-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.75rem; color: #ff4444; text-decoration: none;
+    margin-top: 12px; background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.2);
+    padding: 5px 10px; border-radius: 6px; font-weight: 500;
+  }
+
+  /* DB tables */
+  .db-block { margin-bottom: 24px; }
+  .db-header {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(232,101,10,0.08); border: 1px solid rgba(232,101,10,0.2);
+    border-radius: 10px 10px 0 0; padding: 12px 16px;
+  }
+  .db-header i { color: #e8650a; }
+  .db-header strong { font-size: 0.9rem; color: #e2e8f0; }
+  .db-header small { font-size: 0.75rem; color: #94a3b8; margin-left: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: #1a2540; border: 1px solid rgba(255,255,255,0.07); border-top: none; border-radius: 0 0 10px 10px; overflow: hidden; }
+  thead tr { background: rgba(255,255,255,0.04); }
+  th { padding: 10px 14px; text-align: left; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; white-space: nowrap; }
+  td { padding: 10px 14px; border-top: 1px solid rgba(255,255,255,0.05); color: #94a3b8; vertical-align: top; }
+  td:first-child { color: #60a5fa; font-family: monospace; font-size: 0.85rem; }
+  td:nth-child(2) { color: #4ade80; font-family: monospace; font-size: 0.78rem; }
+  td:nth-child(3) { color: #e2e8f0; }
+  td:last-child { color: #64748b; font-style: italic; font-size: 0.78rem; }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+  /* Features */
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .feat-card {
+    background: #1a2540; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 16px; text-align: center;
+  }
+  .feat-card i { font-size: 1.5rem; color: #e8650a; margin-bottom: 10px; display: block; }
+  .feat-card h4 { font-size: 0.85rem; font-weight: 700; color: #e2e8f0; margin-bottom: 6px; }
+  .feat-card p { font-size: 0.75rem; color: #94a3b8; line-height: 1.5; }
+
+  /* Steps */
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step { display: flex; gap: 16px; align-items: flex-start; }
+  .step-n {
+    width: 32px; height: 32px; flex-shrink: 0;
+    background: linear-gradient(135deg, #e8650a, #c4520a);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; color: #fff;
+  }
+  .step-body strong { display: block; font-size: 0.88rem; color: #e2e8f0; margin-bottom: 3px; }
+  .step-body p { font-size: 0.8rem; color: #94a3b8; margin: 0; }
+  .step-body code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; font-family: monospace; color: #4ade80; font-size: 0.82rem; }
+
+  /* Video cards */
+  .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .video-card {
+    background: #1a2540; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .video-icon { font-size: 1.8rem; color: #ff4444; }
+  .video-card strong { font-size: 0.88rem; color: #e2e8f0; font-weight: 700; }
+  .video-card small { font-size: 0.75rem; color: #94a3b8; display: block; margin-top: 2px; }
+  .video-card p { font-size: 0.78rem; color: #94a3b8; line-height: 1.5; margin: 0; }
+  .video-card a { font-size: 0.75rem; color: #ff4444; text-decoration: none; display: flex; align-items: center; gap: 4px; margin-top: auto; }
+
+  /* Code block */
+  .code-block {
+    background: #0f172a; border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px; padding: 16px 20px; margin-top: 16px;
+  }
+  .code-block pre { color: #4ade80; font-family: 'Courier New', monospace; font-size: 0.85rem; line-height: 1.8; }
+  .code-block .comment { color: #64748b; }
+
+  /* Footer */
+  .report-footer {
+    text-align: center; padding: 32px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: #64748b; font-size: 0.8rem; margin-top: 40px;
+  }
+  .report-footer strong { color: #e8650a; }
+
+  /* ====== PRINT STYLES ====== */
+  @media print {
+    body { background: #fff !important; color: #1a1a1a !important; font-size: 11pt; }
+    .download-bar { display: none !important; }
+    .report { margin: 0 auto; padding: 0; }
+    .cover { background: #f8f9fa !important; border: 2px solid #e8650a !important; color: #1a1a1a !important; }
+    .cover h1, .cover h2 { color: #1a1a1a !important; }
+    .cover-meta-item .value { color: #1a1a1a !important; }
+    .cover-meta-item .label { color: #666 !important; }
+    .card, .tech-card, .feat-card, .video-card { background: #f8f9fa !important; border: 1px solid #ddd !important; color: #1a1a1a !important; break-inside: avoid; }
+    .card p, .tech-card p, .tech-card ul li { color: #444 !important; }
+    .section-title { color: #e8650a !important; border-bottom-color: #e8650a !important; }
+    table { background: #fff !important; border: 1px solid #ddd !important; }
+    th { background: #f0f0f0 !important; color: #333 !important; }
+    td { color: #444 !important; border-top-color: #eee !important; }
+    td:first-child { color: #1a56db !important; }
+    td:nth-child(2) { color: #057a55 !important; }
+    .db-header { background: #fff3e0 !important; border-color: #e8650a !important; }
+    .db-header strong { color: #1a1a1a !important; }
+    .ov-item { background: #f8f9fa !important; border-color: #ddd !important; }
+    .ov-item span { color: #1a1a1a !important; }
+    .tech-name { color: #1a1a1a !important; }
+    .feat-card h4 { color: #1a1a1a !important; }
+    .feat-card p { color: #444 !important; }
+    .step-body strong { color: #1a1a1a !important; }
+    .step-body p { color: #444 !important; }
+    .video-card strong { color: #1a1a1a !important; }
+    .video-card p { color: #444 !important; }
+    .code-block { background: #f0f0f0 !important; border-color: #ddd !important; }
+    .code-block pre { color: #057a55 !important; }
+    .report-footer { color: #666 !important; }
+    .cover-icon { font-size: 3rem !important; }
+    h1 { page-break-after: avoid; }
+    .section { page-break-inside: avoid; }
+    .tech-grid, .features-grid, .video-grid { grid-template-columns: 1fr 1fr !important; }
+    .overview-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Download Bar (hidden in print) -->
+<div class="download-bar">
+  <span>📄 <strong>Library Management System</strong> — Project Report</span>
+  <button class="btn-pdf" onclick="window.print()">
+    <i class="fas fa-download"></i> Download PDF / Print
+  </button>
+</div>
+
+<div class="report">
+
+  <!-- ========== COVER PAGE ========== -->
+  <div class="cover">
+    <i class="fas fa-book-open cover-icon"></i>
+    <h1>Library Management System</h1>
+    <h2>Project Information Report</h2>
+    <div class="cover-divider"></div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="label">Developer</div>
+        <div class="value">Piyush Rasne</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">College</div>
+        <div class="value">Shankarrao Butte Patil Senior College, Junnar</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">Version</div>
+        <div class="value">1.0 — March 2026</div>
+      </div>
+    </div>
+    <div class="tech-tags">
+      <span class="tech-tag tt-python"><i class="fab fa-python"></i> Python 3</span>
+      <span class="tech-tag tt-flask"><i class="fas fa-fire"></i> Flask</span>
+      <span class="tech-tag tt-sqlite"><i class="fas fa-database"></i> SQLite</span>
+      <span class="tech-tag tt-web"><i class="fab fa-html5"></i> HTML / CSS / JS</span>
+    </div>
+  </div>
+
+  <!-- ========== 1. INTRODUCTION ========== -->
+  <div class="section">
+    <div class="section-title"><div class="section-num">1</div> Introduction & Project Overview</div>
+    <div class="card">
+      <p>The <strong>Library Management System (LMS)</strong> is a full-stack web application designed to automate and digitize all daily operations of a college library. It eliminates manual paperwork and provides a fast, secure, and user-friendly platform for managing books, members, and transactions.</p>
+      <p>This system supports two user roles — <strong>Admin</strong> (librarian) and <strong>Member</strong> (student). Admins can manage the entire library catalog, issue or return books, track overdue fines, and generate reports. Members can log in to view their issued books and profile.</p>
+      <p>The project was developed using <strong>Python</strong> with the <strong>Flask</strong> micro web framework, <strong>SQLite</strong> as the embedded database, and <strong>HTML, CSS, JavaScript</strong> for the responsive dark-themed frontend.</p>
+      <div class="overview-grid">
+        <div class="ov-item"><i class="fas fa-user"></i><div><strong>Developer</strong><span>Piyush Rasne</span></div></div>
+        <div class="ov-item"><i class="fas fa-university"></i><div><strong>College</strong><span>S.B.P. Senior College, Junnar</span></div></div>
+        <div class="ov-item"><i class="fas fa-server"></i><div><strong>Server</strong><span>Flask (localhost:5000)</span></div></div>
+        <div class="ov-item"><i class="fas fa-database"></i><div><strong>Database</strong><span>SQLite (library.db)</span></div></div>
+        <div class="ov-item"><i class="fas fa-layer-group"></i><div><strong>Architecture</strong><span>MVC (Flask + Jinja2)</span></div></div>
+        <div class="ov-item"><i class="fas fa-calendar"></i><div><strong>Date</strong><span>March 2026</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 2. TECHNOLOGIES ========== -->
+  <div class="section">
+    <div class="section-title"><div class="section-num">2</div> Technologies & Languages Used</div>
+    <div class="tech-grid">
+
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-icon ti-python"><i class="fab fa-python"></i></div>
+          <div><div class="tech-name">Python 3</div><div class="tech-role">Backend Programming Language</div></div>
+        </div>
+        <p>Python is the core language used for all server-side logic. It is readable, powerful, and ideal for rapid web development.</p>
+        <ul>
+          <li>Handles all server-side business logic</li>
+          <li>Processes form data and database queries</li>
+          <li>Manages user sessions and login authentication</li>
+          <li>Auto-calculates overdue fines (₹5/day)</li>
+        </ul>
+        <a href="https://www.youtube.com/watch?v=_uQrJ0TkZlc" class="yt-link"><i class="fab fa-youtube"></i> Learn Python — Programming with Mosh (YouTube)</a>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-icon ti-flask"><i class="fas fa-fire"></i></div>
+          <div><div class="tech-name">Flask</div><div class="tech-role">Python Web Framework</div></div>
+        </div>
+        <p>Flask is a lightweight web framework that handles HTTP requests, URL routing, sessions, and HTML template rendering.</p>
+        <ul>
+          <li>Defines all URL routes (login, books, members…)</li>
+          <li>Renders Jinja2 HTML templates dynamically</li>
+          <li>Manages secure login sessions (flask-login)</li>
+          <li>Handles POST/GET form submissions</li>
+        </ul>
+        <a href="https://www.youtube.com/watch?v=Z1RJmh_OqeA" class="yt-link"><i class="fab fa-youtube"></i> Flask Full Course — freeCodeCamp (YouTube)</a>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-icon ti-sqlite"><i class="fas fa-database"></i></div>
+          <div><div class="tech-name">SQLite</div><div class="tech-role">Embedded Relational Database</div></div>
+        </div>
+        <p>SQLite is a file-based relational database stored as <code>library.db</code>. No separate server installation is needed — it works automatically.</p>
+        <ul>
+          <li>Stores all books, members, and transactions</li>
+          <li>Fast SQL queries for real-time search & reports</li>
+          <li>No installation needed — single .db file</li>
+          <li>Auto-created when the app starts</li>
+        </ul>
+        <a href="https://www.youtube.com/watch?v=byHcYRpMgI4" class="yt-link"><i class="fab fa-youtube"></i> SQLite & Python — TechWithTim (YouTube)</a>
+      </div>
+
+      <div class="tech-card">
+        <div class="tech-card-header">
+          <div class="tech-icon ti-web"><i class="fab fa-html5"></i></div>
+          <div><div class="tech-name">HTML / CSS / JavaScript</div><div class="tech-role">Frontend Technologies</div></div>
+        </div>
+        <p>The frontend is built with pure HTML5, CSS3, and Vanilla JavaScript for a premium dark-themed, fully responsive UI.</p>
+        <ul>
+          <li><strong>HTML (Jinja2)</strong> — page structure & templates</li>
+          <li><strong>CSS3</strong> — dark theme, animations, mobile layout</li>
+          <li><strong>JavaScript</strong> — sidebar, charts, auto-search</li>
+          <li><strong>Font Awesome 6</strong> — icons throughout the app</li>
+        </ul>
+        <a href="https://www.youtube.com/watch?v=mU6anWqZJcc" class="yt-link"><i class="fab fa-youtube"></i> HTML/CSS/JS Full Course — freeCodeCamp (YouTube)</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== 3. DATABASE SCHEMA ========== -->
+  <div class="section">
+    <div class="section-title"><div class="section-num">3</div> Database Design & Tables</div>
+    <div class="card">
+      <p>The system uses a <strong>SQLite</strong> relational database named <code>library.db</code> with <strong>3 main tables</strong>: <code>users</code>, <code>books</code>, and <code>transactions</code>. The database is automatically created and seeded with sample data on the first app run.</p>
+      <p><strong>Relationships:</strong> The <code>transactions</code> table links to both <code>books</code> and <code>users</code> via foreign keys — one transaction belongs to one book and one member.</p>
+    </div>
+
+    <!-- Users Table -->
+    <div class="db-block">
+      <div class="db-header">
+        <i class="fas fa-users"></i>
+        <strong>Table: users</strong>
+        <small>Stores all admin and member accounts</small>
+      </div>
+      <table>
+        <thead><tr><th>Column</th><th>Data Type</th><th>Description</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>id</td><td>INTEGER PK</td><td>Unique user identifier (auto-incremented)</td><td>1</td></tr>
+          <tr><td>name</td><td>TEXT</td><td>Full name of the user</td><td>Piyush Rasne</td></tr>
+          <tr><td>email</td><td>TEXT UNIQUE</td><td>Email address used for login</td><td>piyush@library.com</td></tr>
+          <tr><td>password</td><td>TEXT</td><td>Hashed password (Werkzeug PBKDF2)</td><td>pbkdf2:sha256:…</td></tr>
+          <tr><td>role</td><td>TEXT</td><td>User role: 'admin' or 'member'</td><td>admin</td></tr>
+          <tr><td>phone</td><td>TEXT</td><td>Contact phone number</td><td>9876543210</td></tr>
+          <tr><td>address</td><td>TEXT</td><td>Member's home address</td><td>Junnar, Pune</td></tr>
+          <tr><td>membership_date</td><td>TEXT</td><td>Date the member joined the library</td><td>2026-03-08</td></tr>
+          <tr><td>is_active</td><td>INTEGER</td><td>Account status: 1=active, 0=inactive</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Books Table -->
+    <div class="db-block">
+      <div class="db-header">
+        <i class="fas fa-book"></i>
+        <strong>Table: books</strong>
+        <small>Stores all library book records</small>
+      </div>
+      <table>
+        <thead><tr><th>Column</th><th>Data Type</th><th>Description</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>id</td><td>INTEGER PK</td><td>Unique book identifier</td><td>5</td></tr>
+          <tr><td>title</td><td>TEXT</td><td>Full title of the book</td><td>Python Programming</td></tr>
+          <tr><td>author</td><td>TEXT</td><td>Name of the book's author</td><td>Mark Lutz</td></tr>
+          <tr><td>isbn</td><td>TEXT UNIQUE</td><td>International Standard Book Number</td><td>978-1449355739</td></tr>
+          <tr><td>category</td><td>TEXT</td><td>Subject category of the book</td><td>Programming</td></tr>
+          <tr><td>publisher</td><td>TEXT</td><td>Name of the publishing company</td><td>O'Reilly Media</td></tr>
+          <tr><td>year</td><td>INTEGER</td><td>Year the book was published</td><td>2013</td></tr>
+          <tr><td>total_copies</td><td>INTEGER</td><td>Total copies owned by library</td><td>4</td></tr>
+          <tr><td>available_copies</td><td>INTEGER</td><td>Copies currently available to issue</td><td>3</td></tr>
+          <tr><td>description</td><td>TEXT</td><td>Short summary of the book</td><td>Learning Python…</td></tr>
+          <tr><td>added_date</td><td>TEXT</td><td>Date the book was added to catalog</td><td>2026-03-08</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="db-block">
+      <div class="db-header">
+        <i class="fas fa-exchange-alt"></i>
+        <strong>Table: transactions</strong>
+        <small>Tracks every book issue and return with fine calculation</small>
+      </div>
+      <table>
+        <thead><tr><th>Column</th><th>Data Type</th><th>Description</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>id</td><td>INTEGER PK</td><td>Unique transaction record identifier</td><td>12</td></tr>
+          <tr><td>book_id</td><td>INTEGER FK</td><td>Foreign key → books.id (which book)</td><td>5</td></tr>
+          <tr><td>user_id</td><td>INTEGER FK</td><td>Foreign key → users.id (which member)</td><td>2</td></tr>
+          <tr><td>issue_date</td><td>TEXT</td><td>Date when the book was issued to member</td><td>2026-03-01</td></tr>
+          <tr><td>due_date</td><td>TEXT</td><td>Expected return date (issue + 14 days)</td><td>2026-03-15</td></tr>
+          <tr><td>return_date</td><td>TEXT</td><td>Actual date the book was returned (NULL if not)</td><td>2026-03-14</td></tr>
+          <tr><td>fine</td><td>REAL</td><td>Late fine in ₹ at ₹5 per overdue day</td><td>25.00</td></tr>
+          <tr><td>status</td><td>TEXT</td><td>Current status: 'issued' or 'returned'</td><td>issued</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ========== 4. FEATURES ========== -->
+  <div class="section">
+    <div class="section-title"><div class="section-num">4</div> Key Features of the System</div>
+    <div class="features-grid">
+      <div class="feat-card"><i class="fas fa-shield-alt"></i><h4>Role-Based Login</h4><p>Admin & Member roles with hashed passwords and secure Flask sessions.</p></div>
+      <div class="feat-card"><i class="fas fa-book"></i><h4>Book Catalog (CRUD)</h4><p>Add, edit, delete, and search books by title, author, ISBN, or category.</p></div>
+      <div class="feat-card"><i class="fas fa-users"></i><h4>Member Management</h4><p>Register members, activate/deactivate accounts, and view issue history.</p></div>
+      <div class="feat-card"><i class="fas fa-exchange-alt"></i><h4>Issue & Return</h4><p>Issue books with a 14-day due date; return and auto-calculate ₹5/day fine.</p></div>
+      <div class="feat-card"><i class="fas fa-chart-bar"></i><h4>Reports & Analytics</h4><p>Monthly charts, most-borrowed books, category stats, and overdue lists.</p></div>
+      <div class="feat-card"><i class="fas fa-mobile-alt"></i><h4>Mobile Responsive</h4><p>Fully responsive UI for desktop, tablet, and mobile with collapsible sidebar.</p></div>
+    </div>
+  </div>
+
+  <!-- ========== 5. HOW TO RUN ========== -->
+  <div class="section">
+    <div class="section-title"><div class="section-num">5</div> How to Run the Project</div>
+    <div class="card">
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div class="step-body"><strong>Install Python 3</strong><p>Download from <a href="https://python.org" style="color:#e8650a">python.org</a> and install Python 3.10 or above on your computer.</p></div></div>
+        <div class="step"><div class="step-n">2</div><div class="step-body"><strong>Open Terminal in Project Folder</strong><p>Open Command Prompt or PowerShell and navigate to the <code>library management system</code> folder.</p></div></div>
+        <div class="step"><div class="step-n">3</div><div class="step-body"><strong>Install Dependencies</strong><p>Run: <code>pip install flask werkzeug</code> to install all required packages.</p></div></div>
+        <div class="step"><div class="step-n">4</div><div class="step-body"><strong>Start the App</strong><p>Run: <code>python app.py</code> — the database will be auto-created and the server will start.</p></div></div>
+        <div class="step"><div class="step-n">5</div><div class="step-body"><strong>Open in Browser</strong><p>Visit <a href="http://127.0.0.1:5000" style="color:#e8650a">http://127.0.0.1:5000</a> — login as Admin: <code>admin@library.com</code> / <code>admin123</code></p></div></div>
+      </div>
+      <div class="code-block">
+        <pre><span class="comment"># Navigate to project folder</span>
+cd "library management system"
+
+<span class="comment"># Install dependencies</span>
+pip install flask werkzeug
+
+<span class="comment"># Run the application</span>
+python app.py
+
+<span class="comment"># Open browser at:</span>
+http://127.0.0.1:5000</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 6. LEARNING RESOURCES ========== -->
+  <div class="section">
+    <div class="section-title"><div class="section-num">6</div> Learning Resources & Video Tutorials</div>
+    <div class="video-grid">
+      <div class="video-card">
+        <div class="video-icon"><i class="fab fa-youtube"></i></div>
+        <strong>Python Full Course for Beginners</strong>
+        <small>Programming with Mosh · 6 hours</small>
+        <p>Complete Python tutorial covering variables, functions, OOP, and file handling — all concepts used in this project.</p>
+        <a href="https://www.youtube.com/watch?v=_uQrJ0TkZlc"><i class="fab fa-youtube"></i> youtube.com/watch?v=_uQrJ0TkZlc</a>
+      </div>
+      <div class="video-card">
+        <div class="video-icon"><i class="fab fa-youtube"></i></div>
+        <strong>Flask Web Development Full Course</strong>
+        <small>freeCodeCamp · 4 hours</small>
+        <p>Build web apps with Flask — routing, Jinja2 templates, forms, sessions, and SQLite integration from scratch.</p>
+        <a href="https://www.youtube.com/watch?v=Z1RJmh_OqeA"><i class="fab fa-youtube"></i> youtube.com/watch?v=Z1RJmh_OqeA</a>
+      </div>
+      <div class="video-card">
+        <div class="video-icon"><i class="fab fa-youtube"></i></div>
+        <strong>SQLite & Python Database Tutorial</strong>
+        <small>Tech With Tim · 1.5 hours</small>
+        <p>Learn SQLite with Python — creating tables, running queries, and managing data as used in library.db.</p>
+        <a href="https://www.youtube.com/watch?v=byHcYRpMgI4"><i class="fab fa-youtube"></i> youtube.com/watch?v=byHcYRpMgI4</a>
+      </div>
+      <div class="video-card">
+        <div class="video-icon"><i class="fab fa-youtube"></i></div>
+        <strong>HTML, CSS & JavaScript Full Course</strong>
+        <small>freeCodeCamp · 8 hours</small>
+        <p>Complete frontend course covering HTML5, CSS3 animations, and JavaScript — used to build the entire UI.</p>
+        <a href="https://www.youtube.com/watch?v=mU6anWqZJcc"><i class="fab fa-youtube"></i> youtube.com/watch?v=mU6anWqZJcc</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="report-footer">
+    <p><strong>Library Management System</strong> — Project Report</p>
+    <p style="margin-top:4px">Developer: <strong>Piyush Rasne</strong> &nbsp;|&nbsp; Shankarrao Butte Patil Senior College, Junnar &nbsp;|&nbsp; March 2026</p>
+  </div>
+
+</div>
+</body>
+</html>

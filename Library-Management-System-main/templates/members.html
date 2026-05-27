@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Members - Library MS{% endblock %}
+{% block page_title %}<i class="fas fa-users"></i> Members{% endblock %}
+{% block content %}
+<div class="page-actions">
+    <form class="search-form" method="GET">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" name="q" placeholder="Search by name or email..." value="{{ q }}">
+        </div>
+        <button type="submit" class="btn-primary"><i class="fas fa-search"></i> Search</button>
+        {% if q %}<a href="{{ url_for('members') }}" class="btn-secondary">Clear</a>{% endif %}
+    </form>
+    <a href="{{ url_for('add_member') }}" class="btn-primary"><i class="fas fa-user-plus"></i> Add Member</a>
+</div>
+
+<div class="table-card">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Joined</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in members %}
+                <tr>
+                    <td>{{ m.id }}</td>
+                    <td>
+                        <div class="member-cell">
+                            <div class="member-avatar">{{ m.name[0].upper() }}</div>
+                            {{ m.name }}
+                        </div>
+                    </td>
+                    <td>{{ m.email }}</td>
+                    <td>{{ m.phone or '-' }}</td>
+                    <td>{{ m.membership_date }}</td>
+                    <td>
+                        <span class="badge badge-{{ 'success' if m.is_active else 'danger' }}">
+                            {{ 'Active' if m.is_active else 'Inactive' }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-btns">
+                            <a href="{{ url_for('edit_member', member_id=m.id) }}" class="btn-icon edit" title="Edit"><i class="fas fa-edit"></i></a>
+                            <form method="POST" action="{{ url_for('delete_member', member_id=m.id) }}" onsubmit="return confirm('Delete member {{ m.name }}?')">
+                                <button type="submit" class="btn-icon delete" title="Delete"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7" class="empty-row">No members found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
