@@ -7,7 +7,7 @@ from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = 'library_secret_key_2025'
-DATABASE = 'library.db'
+DATABASE = os.path.join(os.path.dirname(__file__), 'library.db')
 
 
 def get_db():
@@ -77,14 +77,7 @@ def init_db():
         ''', ('Administrator', 'admin@library.com',
               generate_password_hash('admin123'), 'admin'))
 
-    # Seed sample member
-    cursor.execute("SELECT id FROM users WHERE email = 'member@library.com'")
-    if not cursor.fetchone():
-        cursor.execute('''
-            INSERT INTO users (name, email, password, role, phone)
-            VALUES (?, ?, ?, ?, ?)
-        ''', ('Piyush Rasne', 'member@library.com',
-              generate_password_hash('member123'), 'member', '9876543210'))
+
 
     # Seed sample books
     books = [
@@ -195,7 +188,8 @@ def dashboard():
                            active_issues=active_issues,
                            overdue=overdue,
                            total_fines=round(total_fines, 2),
-                           recent_transactions=recent_transactions)
+                           recent_transactions=recent_transactions,
+                           today=datetime.today().strftime('%Y-%m-%d'))
 
 
 # --- Books ---
@@ -414,7 +408,10 @@ def issue_book():
     book_id = request.form.get('book_id')
     user_id = request.form.get('user_id')
     issue_date = datetime.today().strftime('%Y-%m-%d')
-    due_date = (datetime.today() + timedelta(days=14)).strftime('%Y-%m-%d')
+    days = request.form.get('days', type=int)
+    if not days or days < 1:
+        days = 14
+    due_date = (datetime.today() + timedelta(days=days)).strftime('%Y-%m-%d')
     conn = get_db()
     book = conn.execute('SELECT * FROM books WHERE id = ?', (book_id,)).fetchone()
     if not book or book['available_copies'] < 1:
@@ -465,6 +462,30 @@ def return_book(txn_id):
         flash(f'Book returned. Fine: ₹{fine:.2f}', 'warning')
     else:
         flash('Book returned successfully. No fine!', 'success')
+    return redirect(url_for('transactions'))
+
+
+@app.route('/transactions/add_fine/<int:txn_id>', methods=['POST'])
+@admin_required
+def add_fine(txn_id):
+    fine_amount = request.form.get('fine_amount', type=float)
+    if fine_amount is None or fine_amount <= 0:
+        flash('Invalid fine amount.', 'danger')
+        return redirect(url_for('transactions'))
+        
+    conn = get_db()
+    txn = conn.execute("SELECT * FROM transactions WHERE id = ?", (txn_id,)).fetchone()
+    if not txn:
+        flash('Transaction not found.', 'danger')
+        conn.close()
+        return redirect(url_for('transactions'))
+        
+    new_fine = txn['fine'] + fine_amount
+    conn.execute('UPDATE transactions SET fine=? WHERE id=?', (new_fine, txn_id))
+    conn.commit()
+    conn.close()
+    
+    flash(f'Successfully added ₹{fine_amount:.2f} fine.', 'success')
     return redirect(url_for('transactions'))
 
 
